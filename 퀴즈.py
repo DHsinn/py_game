@@ -1,4 +1,4 @@
-import pygame
+import pygame, time
 import random
 # 기본 초기화 (반드시 해야하는 것들)
 pygame.init() #초기화 반드시 필요
@@ -14,16 +14,21 @@ pygame.display.set_caption("sion game") #게임 제목
 #FPS
 clock = pygame.time.Clock()
 
-background = pygame.image.load("C:\\Users\\sion9\\Desktop\\python test\\pygame_basic\\back1.png")
+#배경
+background = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\back1.png")
 
-# 캐릭터 만들기
-character = pygame.image.load("C:\\Users\\sion9\\Desktop\\python test\\pygame_basic\\character1.png")
+# 캐릭터 설정 만들기
+character = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\character1.png")
 character_size = character.get_rect().size
 character_width = character_size[0]
 character_height = character_size[1]
 character_x_pos = (screen_width/2) - (character_width/2)
 character_y_pos = screen_height - character_height
-character_hp = 40
+character_hp = 30
+inb = 2
+inbMode = False
+inbStartTime = 0
+
 
 font = pygame.font.SysFont(None,40)
 image = font.render('HP: {character_hp}', True, (255,0,0))
@@ -38,13 +43,13 @@ character_speed = 10
 
 
 # 적군 하늘위에서 떨어지는 덩
-ddong = pygame.image.load("C:\\Users\\sion9\\Desktop\\python test\\pygame_basic\\enemy.png")
-ddong_size = ddong.get_rect().size
-ddong_width = ddong_size[0]
-ddong_height = ddong_size[1]
-ddong_x_pos = random.randint(0, screen_width - ddong_width)
-ddong_y_pos = 0
-ddong_speed = 10
+stone = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\stone.png")
+stone_size = stone.get_rect().size
+stone_width = stone_size[0]
+stone_height = stone_size[1]
+stone_x_pos = random.randint(0, screen_width - stone_width)
+stone_y_pos = 0
+stone_speed = 10
 
 
 running = True #게임이 진행중인가?
@@ -73,30 +78,35 @@ while running:
     elif character_x_pos > screen_width - character_width:
         character_x_pos = screen_width - character_width
 
-    ddong_y_pos += ddong_speed
+    stone_y_pos += stone_speed
 
-    if ddong_y_pos > screen_height:
-        ddong_y_pos = 0
-        ddong_x_pos = random.randint(0, screen_width - ddong_width)
+    if stone_y_pos > screen_height:
+        stone_y_pos = 0
+        stone_x_pos = random.randint(0, screen_width - stone_width)
 
     
     character_rect = character.get_rect()
     character_rect.left = character_x_pos
     character_rect.top = character_y_pos
 
-    ddong_rect = ddong.get_rect()
-    ddong_rect.left = ddong_x_pos
-    ddong_rect.top = ddong_y_pos
+    stone_rect = stone.get_rect()
+    stone_rect.left = stone_x_pos
+    stone_rect.top = stone_y_pos
 
-    if character_rect.colliderect(ddong_rect):
+    if character_rect.colliderect(stone_rect):
         character_hp -= 0.5
+        # if character_hp - 1:
+            # while True:
+            #     if inbMode and time.time() - inbStartTime> inb:
+            #         inbMode = False
+            #         break
         if character_hp == 0:
             running = False
     
 
     screen.blit(background, (0,0))
     screen.blit(character, (character_x_pos,character_y_pos))
-    screen.blit(ddong, (ddong_x_pos,ddong_y_pos))
+    screen.blit(stone, (stone_x_pos,stone_y_pos))
     pygame.display.update()
 
 pygame.quit()
