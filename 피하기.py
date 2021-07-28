@@ -19,8 +19,8 @@ clock = pygame.time.Clock()
 background = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\back1.png")
 
 #브금
-# music = pygame.mixer.music.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\wake.mp3")
-# pygame.mixer.music.play(-1)
+music = pygame.mixer.music.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\bgm.mp3")
+pygame.mixer.music.play(-1)
 
 # 캐릭터 설정 만들기
 character = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\character1.png")
@@ -29,7 +29,7 @@ character_width = character_size[0]
 character_height = character_size[1]
 character_x_pos = (screen_width/2) - (character_width/2)
 character_y_pos = screen_height - character_height
-character_hp = 30
+character_hp = 50
 inb = 5
 inbMode = False
 inbStartTime = 0
@@ -94,11 +94,12 @@ while running:
     stone_rect = stone.get_rect()
     stone_rect.left = stone_x_pos
     stone_rect.top = stone_y_pos
-
+    
+    #충돌시 처리
     if character_rect.colliderect(stone_rect):
         character_hp -= 1
-        if inbMode and time.time() - inbStartTime> inb:
-            inbMode = False
+        # if inbMode and time.time() - inbStartTime> inb:
+        #     inbMode = False
         if character_hp == 0:
             running = False
     for _ in range(character_hp):
@@ -108,7 +109,7 @@ while running:
     pos = image.get_rect()
     pos.move(30,30)
     
-
+    #스크린에 표현
     screen.blit(background, (0,0))
     screen.blit(character, (character_x_pos,character_y_pos))
     screen.blit(stone, (stone_x_pos,stone_y_pos))
