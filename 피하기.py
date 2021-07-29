@@ -1,16 +1,29 @@
-import pygame
 import time
+import pygame
+from time import localtime
 import random
+
+def hitman(timeData):
+    timeData[1] = time.localtime(time.time())
+    timeData[1] = timeData[1].tm_min*60 + timeData[1].tm_sec
+    if timeData[1] - timeData[0] >=2:
+        timeData[0] = timeData[1]
+        character.fill(tp)
+        return True
+
+    else:
+        return False
+    
 # 기본 초기화 (반드시 해야하는 것들)
 pygame.init() #초기화 반드시 필요
 
 #화면 크기설정
-screen_width = 1400 #가로크기
-screen_height = 730 #세로크기
+screen_width = 1500 #가로크기
+screen_height = 750 #세로크기
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 #화면 타이틀 설정
-pygame.display.set_caption("sion game") #게임 제목
+pygame.display.set_caption("보기") #게임 제목
 
 #FPS
 clock = pygame.time.Clock()
@@ -29,10 +42,7 @@ character_width = character_size[0]
 character_height = character_size[1]
 character_x_pos = (screen_width/2) - (character_width/2)
 character_y_pos = screen_height - character_height
-character_hp = 50
-inb = 5
-inbMode = False
-inbStartTime = 0
+character_hp = 10
 
 #캐릭터 hp표시
 font = pygame.font.SysFont(None,40)
@@ -41,6 +51,7 @@ hp = "HP:" + str(character_hp)
 
 #이동 위치
 to_x = 0
+timeData = [0, 0]
 character_speed = 10
 
 
@@ -52,7 +63,6 @@ stone_height = stone_size[1]
 stone_x_pos = random.randint(0, screen_width - stone_width)
 stone_y_pos = 0
 stone_speed = 10
-
 
 running = True #게임이 진행중인가?
 while running:
@@ -95,11 +105,30 @@ while running:
     stone_rect.left = stone_x_pos
     stone_rect.top = stone_y_pos
     
+    tp = (0, 0, 0, 0)
+    # hit = False
+    # god_time = 2
+    # alpha_time = 0
+    # if hit == False:
+    #     if character_rect.colliderect(stone_rect):
+    #         hit = True
+    #         god_time=2
+    # if hit==True:
+    #     god_time -= 0.01
+    #     alpha_time += 1
+
+    #     if alpha_time > 5:
+    #         alpha_time = 0
+    #         character!=character
+    #     if god_time<=0:
+    #         god_time=0
+    #         hit=False
+    #         character = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\character1.png")
+
     #충돌시 처리
     if character_rect.colliderect(stone_rect):
-        character_hp -= 1
-        # if inbMode and time.time() - inbStartTime> inb:
-        #     inbMode = False
+        if hitman(timeData):
+            character_hp-=1
         if character_hp == 0:
             running = False
     for _ in range(character_hp):
@@ -115,5 +144,6 @@ while running:
     screen.blit(stone, (stone_x_pos,stone_y_pos))
     screen.blit(image,pos)
     pygame.display.update()
+
 
 pygame.quit()
