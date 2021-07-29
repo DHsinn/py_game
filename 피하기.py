@@ -138,6 +138,7 @@ while running:
     pos = image.get_rect()
     pos.move(30,30)
     
+    
     #스크린에 표현
     screen.blit(background, (0,0))
     screen.blit(character, (character_x_pos,character_y_pos))
