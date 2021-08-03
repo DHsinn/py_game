@@ -37,6 +37,9 @@ pygame.mixer.music.play(-1)
 
 #총알
 bullet = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\bullet.png")
+bullet_sound = pygame.mixer.Sound("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\shot.wav")
+bullet_damage = 0.1
+isShotenemy = False
 
 # 캐릭터 설정 만들기
 character = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\character1.png")
@@ -69,6 +72,8 @@ enemy_width = enemy_size[0]
 enemy_height = enemy_size[1]
 enemy_x_pos = (screen_width/2) - (enemy_width/2)
 enemy_y_pos = (screen_height/2) - (enemy_height/2)
+enemy_hp = 100
+count = 0
 
 running = True #게임이 진행중인가?
 while running:
@@ -88,22 +93,42 @@ while running:
                 to_y -= character_speed
             if event.key == pygame.K_DOWN:
                 to_y += character_speed
-            if event.key == pygame.K_LCTRL:
-                bullet_x = (screen_width*0.05) + character_width
-                bullet_y = (screen_height*0.8) + character_height/2
+            if event.key == pygame.K_LCTRL: # 총알이 나가는 위치
+                bullet_x = (character_x_pos+50)
+                bullet_y = (character_y_pos+50)
                 bullet_xy.append([bullet_x,bullet_y])
+                bullet_sound.play(0)
+                # pygame.mixer.Sound.set_volume(1)
         if event.type == pygame.KEYUP: #방향키손뗏을때
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 to_x = 0
             if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                 to_y = 0
+            # pygame.mixer.music.pause()
 
     if len(bullet_xy)!=0:
         for i, bxy in enumerate(bullet_xy):
             bxy[0] += 15
             bullet_xy[i][0] = bxy[0]
+            if bxy[0] > enemy_x_pos:
+                if bxy[1] > enemy_y_pos and bxy[1]<enemy_y_pos+enemy_height:
+                    bullet_xy.remove(bxy)
+                    isShotenemy = True
+            
             if bxy[0] >= screen_width:
-                bullet_xy.remove(bxy)
+                try:
+                    bullet_xy.remove(bxy)
+                except:
+                    pass
+    #적이 총알에 닿으면 사라짐
+    if not isShotenemy:
+        screen.blit(enemy, (enemy_x_pos,enemy_y_pos))
+    else:
+        enemy_hp -= bullet_damage
+        if enemy_hp<=0:
+            enemy_x_pos = screen_width
+            enemy_y_pos = screen_height#random.randrange(0, screen_height-enemy_height)
+            isShotenemy = False
 
     character_x_pos += to_x
     character_y_pos += to_y
@@ -118,7 +143,6 @@ while running:
     elif character_y_pos > screen_height - character_height:
         character_y_pos = screen_height - character_height
 
-    
     character_rect = character.get_rect()
     character_rect.left = character_x_pos
     character_rect.top = character_y_pos
@@ -126,19 +150,23 @@ while running:
     enemy_rect = enemy.get_rect()
     enemy_rect.left = enemy_x_pos
     enemy_rect.top = enemy_y_pos
+
+    bullet_rect = bullet.get_rect()
     
     tp = (0, 0, 0, 0)
 
     #충돌시 처리
+    #캐릭터와 적 충돌
     if character_rect.colliderect(enemy_rect):
         if hitman(timeData):
             character_hp-=1
-        if character_hp == 0:
+        if character_hp <= 0:
             running = False
     for _ in range(character_hp):
         if character_rect.colliderect(enemy_rect):
             hp = "HP:" + str(character_hp-1)
     image = font.render(hp, True, (100,0,50))
+
     # pos = image.get_rect()
     # pos.move(5,5)
     
@@ -151,6 +179,5 @@ while running:
         for bx,by in bullet_xy:
             screen.blit(bullet, (bx, by))
     pygame.display.update()
-
 
 pygame.quit()
