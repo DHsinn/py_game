@@ -7,7 +7,7 @@ import random
 def hitman(timeData):
     timeData[1] = time.localtime(time.time())
     timeData[1] = timeData[1].tm_min*60 + timeData[1].tm_sec
-    if timeData[1] - timeData[0] >=1.1:
+    if timeData[1] - timeData[0] >= 1.1:
         timeData[0] = timeData[1]
         return True
     
@@ -38,7 +38,7 @@ pygame.mixer.music.play(-1)
 #총알
 bullet = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\bullet.png")
 bullet_sound = pygame.mixer.Sound("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\shot.wav")
-bullet_damage = 0.1
+bullet_damage = 1
 isShotenemy = False
 
 # 캐릭터 설정 만들기
@@ -72,15 +72,15 @@ enemy_width = enemy_size[0]
 enemy_height = enemy_size[1]
 enemy_x_pos = (screen_width/2) - (enemy_width/2)
 enemy_y_pos = (screen_height/2) - (enemy_height/2)
-enemy_hp = 100
+enemy_hp = 3
 enemy_speed = 1
 
-for i in range(enemy_hp):
-    enemy_y_pos += 1
-    if enemy_y_pos < 0:
-        enemy_y_pos -=1
-    if enemy_hp <= 0:
-        break
+# for i in range(enemy_hp):
+#     enemy_y_pos += 1
+#     if enemy_y_pos < 0:
+#         enemy_y_pos -=1
+#     if enemy_hp <= 0:
+#         break
 
 # #랜덤 스폰포인트생성
 # def __init__(self):
@@ -120,7 +120,7 @@ while running:
                 bullet_y = (character_y_pos+50)
                 bullet_xy.append([bullet_x,bullet_y])
                 bullet_sound.play(0)
-                # pygame.mixer.Sound.set_volume(1)
+                bullet_sound.set_volume(0.1)
         if event.type == pygame.KEYUP: #방향키손뗏을때
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 to_x = 0
@@ -193,7 +193,7 @@ while running:
     if character_rect.colliderect(enemy_rect):
         if hitman(timeData):
             character_hp-=1
-        if character_hp <= 0:
+        elif character_hp <= 0:
             running = False
     for _ in range(character_hp):
         if character_rect.colliderect(enemy_rect):
