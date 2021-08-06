@@ -10,7 +10,7 @@ def hitman(timeData):
     if timeData[1] - timeData[0] >= 1.1:
         timeData[0] = timeData[1]
         return True
-    
+
     else:
         return False
 
@@ -72,8 +72,12 @@ enemy_width = enemy_size[0]
 enemy_height = enemy_size[1]
 enemy_x_pos = (screen_width/2) - (enemy_width/2)
 enemy_y_pos = (screen_height/2) - (enemy_height/2)
-enemy_hp = 3
+enemy_hp = 100
 enemy_speed = 1
+
+
+font1 = pygame.font.SysFont(None,60)
+hp1 = "HP:" + str(enemy_hp)
 
 # for i in range(enemy_hp):
 #     enemy_y_pos += 1
@@ -122,10 +126,14 @@ while running:
                 bullet_sound.play(0)
                 bullet_sound.set_volume(0.1)
         if event.type == pygame.KEYUP: #방향키손뗏을때
-            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-                to_x = 0
-            if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                to_y = 0
+            if event.key == pygame.K_LEFT:
+                to_x += character_speed
+            if event.key == pygame.K_RIGHT:
+                to_x -= character_speed
+            if event.key == pygame.K_UP:
+                to_y += character_speed
+            if event.key == pygame.K_DOWN:
+                to_y -= character_speed
             # pygame.mixer.music.pause()
 
     if len(bullet_xy)!=0:
@@ -146,13 +154,13 @@ while running:
     if not isShotenemy:
         screen.blit(enemy, (enemy_x_pos,enemy_y_pos))
     else:
-        if hitman(timeData):
-            enemy_hp -= bullet_damage
+        enemy_hp -= bullet_damage
+        # hp1 = "HP:" + str(enemy_hp-1)
         if enemy_hp<=0:
             enemy_x_pos = screen_width
             enemy_y_pos = screen_height#random.randrange(0, screen_height-enemy_height)
-            isShotenemy = False
-
+        isShotenemy = False
+    image = font.render(hp1, True, (100,0,50))
     character_x_pos += to_x
     character_y_pos += to_y
 
