@@ -25,6 +25,31 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 #화면 타이틀 설정
 pygame.display.set_caption("보기") #게임 제목
 
+#적의 공격생성
+attack = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\attack.png")
+attack_size = attack.get_rect().size
+attack_width = attack_size[0]
+attack_height = attack_size[1]
+attack_x_pos = random.randint(0, screen_width - attack_width)
+attack_y_pos = 0
+attack_speed = 15
+
+attack1 = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\attack.png")
+attack1_size = attack.get_rect().size
+attack1_width = attack_size[0]
+attack1_height = attack_size[1]
+attack1_x_pos = random.randint(0, screen_width - attack1_width)
+attack1_y_pos = 0
+attack1_speed = 5
+
+attack2 = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\attack.png")
+attack2_size = attack.get_rect().size
+attack2_width = attack_size[0]
+attack2_height = attack_size[1]
+attack2_x_pos = random.randint(0, screen_width - attack2_width)
+attack2_y_pos = 0
+attack2_speed = 10
+
 #FPS
 clock = pygame.time.Clock()
 
@@ -76,8 +101,8 @@ enemy_hp = 100
 enemy_speed = 1
 
 
-font1 = pygame.font.SysFont(None,60)
-hp1 = "HP:" + str(enemy_hp)
+# font1 = pygame.font.SysFont(None,60)
+# hp1 = "HP:" + str(enemy_hp)
 
 # for i in range(enemy_hp):
 #     enemy_y_pos += 1
@@ -136,6 +161,33 @@ while running:
                 to_y -= character_speed
             # pygame.mixer.music.pause()
 
+    attack_y_pos += attack_speed
+    if attack_y_pos > screen_height:
+        attack_y_pos = 0
+        attack_x_pos = random.randint(0, screen_width - attack_width)
+
+    attack1_y_pos += attack1_speed
+    if attack1_y_pos > screen_height:
+        attack1_y_pos = 0
+        attack1_x_pos = random.randint(0, screen_width - attack1_width)
+
+    attack2_y_pos += attack2_speed
+    if attack2_y_pos > screen_height:
+        attack2_y_pos = 0
+        attack2_x_pos = random.randint(0, screen_width - attack2_width)
+    
+    attack_rect = attack.get_rect()
+    attack_rect.left = attack_x_pos
+    attack_rect.top = attack_y_pos
+
+    attack1_rect = attack1.get_rect()
+    attack1_rect.left = attack1_x_pos
+    attack1_rect.top = attack1_y_pos
+    
+    attack2_rect = attack2.get_rect()
+    attack2_rect.left = attack2_x_pos
+    attack2_rect.top = attack2_y_pos
+
     if len(bullet_xy)!=0:
         for i, bxy in enumerate(bullet_xy):
             bxy[0] += 15
@@ -160,7 +212,7 @@ while running:
             enemy_x_pos = screen_width
             enemy_y_pos = screen_height#random.randrange(0, screen_height-enemy_height)
         isShotenemy = False
-    image = font.render(hp1, True, (100,0,50))
+    # image = font.render(hp1, True, (100,0,50))
     character_x_pos += to_x
     character_y_pos += to_y
 
@@ -208,6 +260,37 @@ while running:
             hp = "HP:" + str(character_hp-1)
     image = font.render(hp, True, (100,0,50))
 
+    if character_rect.colliderect(attack_rect):
+        if hitman(timeData):
+            character_hp-=1
+        if character_hp == 0:
+            running = False
+    for _ in range(character_hp):
+        if character_rect.colliderect(attack_rect):
+            hp = "HP:" + str(character_hp-1)
+    image = font.render(hp, True, (100,0,50))
+
+    if character_rect.colliderect(attack1_rect):
+        if hitman(timeData):
+            character_hp-=1
+        if character_hp == 0:
+            running = False
+    for _ in range(character_hp):
+        if character_rect.colliderect(attack1_rect):
+            hp = "HP:" + str(character_hp-1)
+    image = font.render(hp, True, (100,0,50))
+
+    if character_rect.colliderect(attack2_rect):
+        if hitman(timeData):
+            character_hp-=1
+        if character_hp == 0:
+            running = False
+    for _ in range(character_hp):
+        if character_rect.colliderect(attack2_rect):
+            hp = "HP:" + str(character_hp-1)
+    image = font.render(hp, True, (100,0,50))
+
+
     # pos = image.get_rect()
     # pos.move(5,5)
     
@@ -216,6 +299,9 @@ while running:
     screen.blit(character, (character_x_pos,character_y_pos))
     screen.blit(enemy, (enemy_x_pos,enemy_y_pos))
     screen.blit(image,(20,20))
+    screen.blit(attack, (attack_x_pos,attack_y_pos))
+    screen.blit(attack1, (attack1_x_pos,attack1_y_pos))
+    screen.blit(attack2, (attack2_x_pos,attack2_y_pos))
     if len(bullet_xy)!=0:
         for bx,by in bullet_xy:
             screen.blit(bullet, (bx, by))
