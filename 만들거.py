@@ -50,6 +50,14 @@ attack2_x_pos = random.randint(0, screen_width - attack2_width)
 attack2_y_pos = 0
 attack2_speed = 10
 
+attack3 = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\attack.png")
+attack3_size = attack.get_rect().size
+attack3_width = attack_size[0]
+attack3_height = attack_size[1]
+attack3_x_pos = 1500
+attack3_y_pos = random.randint(0, screen_height - attack3_height)
+attack3_speed = 10
+
 #FPS
 clock = pygame.time.Clock()
 
@@ -175,9 +183,14 @@ while running:
     if attack2_y_pos > screen_height:
         attack2_y_pos = 0
         attack2_x_pos = random.randint(0, screen_width - attack2_width)
+
+    attack3_x_pos += attack3_speed
+    if attack3_x_pos < screen_width:
+        attack3_y_pos = random.randint(0, screen_height - attack3_height)
+        attack3_x_pos = 0
     
     attack_rect = attack.get_rect()
-    attack_rect.left = attack_x_pos
+    attack_rect.right = attack_x_pos
     attack_rect.top = attack_y_pos
 
     attack1_rect = attack1.get_rect()
@@ -187,6 +200,10 @@ while running:
     attack2_rect = attack2.get_rect()
     attack2_rect.left = attack2_x_pos
     attack2_rect.top = attack2_y_pos
+    
+    attack3_rect = attack3.get_rect()
+    # attack3_rect.right = attack3_x_pos
+    # attack3_rect.bottom = attack3_y_pos
 
     if len(bullet_xy)!=0:
         for i, bxy in enumerate(bullet_xy):
@@ -290,6 +307,16 @@ while running:
             hp = "HP:" + str(character_hp-1)
     image = font.render(hp, True, (100,0,50))
 
+    if character_rect.colliderect(attack3_rect):
+        if hitman(timeData):
+            character_hp-=1
+        if character_hp == 0:
+            running = False
+    for _ in range(character_hp):
+        if character_rect.colliderect(attack3_rect):
+            hp = "HP:" + str(character_hp-1)
+    image = font.render(hp, True, (100,0,50))
+
 
     # pos = image.get_rect()
     # pos.move(5,5)
@@ -302,6 +329,7 @@ while running:
     screen.blit(attack, (attack_x_pos,attack_y_pos))
     screen.blit(attack1, (attack1_x_pos,attack1_y_pos))
     screen.blit(attack2, (attack2_x_pos,attack2_y_pos))
+    screen.blit(attack3, (attack3_x_pos,attack3_y_pos))
     if len(bullet_xy)!=0:
         for bx,by in bullet_xy:
             screen.blit(bullet, (bx, by))
