@@ -10,7 +10,6 @@ def hitman(timeData):
     if timeData[1] - timeData[0] >= 1.1:
         timeData[0] = timeData[1]
         return True
-
     else:
         return False
 
@@ -54,7 +53,7 @@ attack3 = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\a
 attack3_size = attack.get_rect().size
 attack3_width = attack_size[0]
 attack3_height = attack_size[1]
-attack3_x_pos = 1500
+attack3_x_pos = 0
 attack3_y_pos = random.randint(0, screen_height - attack3_height)
 attack3_speed = 10
 
@@ -103,7 +102,7 @@ enemy = pygame.image.load("C:\\Users\\sion9\\Documents\\Mygit\\pygame_basic\\bon
 enemy_size = enemy.get_rect().size
 enemy_width = enemy_size[0]
 enemy_height = enemy_size[1]
-enemy_x_pos = (screen_width/2) - (enemy_width/2)
+enemy_x_pos = screen_width-200
 enemy_y_pos = (screen_height/2) - (enemy_height/2)
 enemy_hp = 100
 enemy_speed = 1
@@ -184,10 +183,10 @@ while running:
         attack2_y_pos = 0
         attack2_x_pos = random.randint(0, screen_width - attack2_width)
 
-    attack3_x_pos += attack3_speed
-    if attack3_x_pos < screen_width:
+    attack3_x_pos -= attack3_speed
+    if attack3_x_pos <= 0:
         attack3_y_pos = random.randint(0, screen_height - attack3_height)
-        attack3_x_pos = 0
+        attack3_x_pos = screen_width
     
     attack_rect = attack.get_rect()
     attack_rect.right = attack_x_pos
@@ -202,8 +201,8 @@ while running:
     attack2_rect.top = attack2_y_pos
     
     attack3_rect = attack3.get_rect()
-    # attack3_rect.right = attack3_x_pos
-    # attack3_rect.bottom = attack3_y_pos
+    attack3_rect.left = attack3_x_pos
+    attack3_rect.bottom = attack3_y_pos
 
     if len(bullet_xy)!=0:
         for i, bxy in enumerate(bullet_xy):
