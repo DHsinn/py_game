@@ -5,7 +5,7 @@ from time import localtime
 import random
 import os
 
-#캐릭터 무적함수
+#캐릭터 n초동안 무적함수
 def hitman(timeData):
     timeData[1] = time.localtime(time.time())
     timeData[1] = timeData[1].tm_min*60 + timeData[1].tm_sec
@@ -19,8 +19,8 @@ def hitman(timeData):
 pygame.init() #초기화 반드시 필요
 
 #화면 크기설정
-screen_width = 1500 #가로크기
-screen_height = 750 #세로크기
+screen_width = 1530 #가로크기
+screen_height = 800 #세로크기
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 #화면 타이틀 설정
@@ -114,33 +114,11 @@ enemy_width = enemy_size[0]
 enemy_height = enemy_size[1]
 enemy_x_pos = screen_width-200
 enemy_y_pos = (screen_height/2) - (enemy_height/2)
-enemy_hp = 100
+enemy_hp = 150
 enemy_speed = 1
 
-# font1 = pygame.font.SysFont(None,60)
-# hp1 = "HP:" + str(enemy_hp)
-
-# for i in range(enemy_hp):
-#     enemy_y_pos += 1
-#     if enemy_y_pos < 0:
-#         enemy_y_pos -=1
-#     if enemy_hp <= 0:
-#         break
-
-# #랜덤 스폰포인트생성
-# def __init__(self):
-#     self.enemy_spawnpoint = random.choice(['Up','Down','Left','Right'])
-# #스폰지점 설정
-#     if self.enemy_spawnpoint == 'Left':
-#         self.enemy_x_pos -= self.enemy_width
-#         self.enemy_y_pos = random.randint(0, screen_height - self.enemy_height)
-#         self.enemy_rad = random.choice([(1,3),(1,2),(2,2),(2,1),(3,1)])
-#     elif self.enemy_spawnpoint == 'Right':
-#         self.enemy_x_pos -= screen_width
-#         self.enemy_y_pos = random.randint(0, screen_height - self.enemy_height)
-#         self.enemy_rad = random
-# def enemy_move(self):
-#     self.enemy_x_pos += self.enemy_speed * self.enemy_
+#적 hp
+# enemyhp = "HP:" + str(enemy_hp)
 
 running = True #게임이 진행중인가?
 while running:
@@ -236,7 +214,7 @@ while running:
                     bullet_xy.remove(bxy)
                 except:
                     pass
-    #적이 총알에 닿으면 사라짐
+    #총알이 적에 닿으면 사라짐
     if not isShotenemy:
         screen.blit(enemy, (enemy_x_pos,enemy_y_pos))
     else:
@@ -245,6 +223,7 @@ while running:
         if enemy_hp<=0:
             enemy_x_pos = screen_width
             enemy_y_pos = screen_height#random.randrange(0, screen_height-enemy_height)
+            running = False
         isShotenemy = False
     # image = font.render(hp1, True, (100,0,50))
     character_x_pos += to_x
@@ -259,16 +238,6 @@ while running:
         character_y_pos = 0
     elif character_y_pos > screen_height - character_height:
         character_y_pos = screen_height - character_height
-    
-    # if enemy_x_pos < 0:
-    #     enemy_x_pos = 0
-    # elif enemy_x_pos > screen_width - enemy_width:
-    #     enemy_x_pos = screen_width - enemy_width
-
-    # if character_y_pos < 0:
-    #     character_y_pos = 0
-    # elif character_y_pos > screen_height - character_height:
-    #     character_y_pos = screen_height - character_height
 
     character_rect = character.get_rect()
     character_rect.left = character_x_pos
@@ -292,7 +261,6 @@ while running:
     for _ in range(character_hp):
         if character_rect.colliderect(enemy_rect):
             hp = "HP:" + str(character_hp-1)
-    image = font.render(hp, True, (100,0,50))
 
     if character_rect.colliderect(attack_rect):
         if hitman(timeData):
@@ -302,7 +270,6 @@ while running:
     for _ in range(character_hp):
         if character_rect.colliderect(attack_rect):
             hp = "HP:" + str(character_hp-1)
-    image = font.render(hp, True, (100,0,50))
 
     if character_rect.colliderect(attack1_rect):
         if hitman(timeData):
@@ -312,7 +279,6 @@ while running:
     for _ in range(character_hp):
         if character_rect.colliderect(attack1_rect):
             hp = "HP:" + str(character_hp-1)
-    image = font.render(hp, True, (100,0,50))
 
     if character_rect.colliderect(attack2_rect):
         if hitman(timeData):
@@ -332,7 +298,6 @@ while running:
     for _ in range(character_hp):
         if character_rect.colliderect(attack3_rect):
             hp = "HP:" + str(character_hp-1)
-    image = font.render(hp, True, (100,0,50))
 
     if character_rect.colliderect(attack4_rect):
         if hitman(timeData):
