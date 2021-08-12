@@ -21,7 +21,12 @@ def run():
     pygame.quit()
 
 def initGame():
-    global gamepad, clock
+    global screen, clock
 
     pygame.init()
-    screen
+    screen = pygame.display.set_mode((screen_width,screen_height))
+    screen.display.set_caption('lala')
+
+    clock = pygame.time.Clock()
+
+initGame()
