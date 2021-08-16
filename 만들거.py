@@ -94,6 +94,7 @@ character_height = character_size[1]
 character_x_pos = (screen_width/2) - (character_width/2)
 character_y_pos = screen_height - character_height
 character_hp = 5
+character_speed = 10
 
 bullet_xy = []
 
@@ -105,17 +106,16 @@ hp = "HP:" + str(character_hp)
 to_x = 0
 to_y = 0
 timeData = [0, 0]
-character_speed = 10
 
 # 적군
 enemy = pygame.image.load(dir + "bone.png")
 enemy_size = enemy.get_rect().size
 enemy_width = enemy_size[0]
 enemy_height = enemy_size[1]
+enemy_hp = 150
 enemy_x_pos = screen_width-200
 enemy_y_pos = (screen_height/2) - (enemy_height/2)
-enemy_hp = 150
-enemy_speed = 1
+enemy_speed = 5
 
 #적 hp
 # enemyhp = "HP:" + str(enemy_hp)
@@ -154,6 +154,15 @@ while running:
             if event.key == pygame.K_DOWN:
                 to_y -= character_speed
             # pygame.mixer.music.pause()
+
+    enemy_x_pos -= enemy_speed
+    enemy_y_pos += enemy_speed
+    if enemy_y_pos > screen_height:
+        enemy_y_pos = 0
+        enemy_x_pos = random.randint(0, screen_width - enemy_width)
+    elif enemy_x_pos <= 0:
+        enemy_y_pos = random.randint(0,screen_height - enemy_height)
+        enemy_x_pos = screen_width
 
     attack_y_pos += attack_speed
     if attack_y_pos > screen_height:
