@@ -81,8 +81,9 @@ background = pygame.image.load(dir + "back1.png")
 music = pygame.mixer.music.load(dir + "bgm.mp3")
 pygame.mixer.music.play(-1)
 
-#게임오버브금
+#게임 승리/오버브금
 over = pygame.mixer.Sound(dir + "over.wav")
+vic = pygame.mixer.Sound(dir + "vic.wav")
 
 #총알
 bullet = pygame.image.load(dir + "bullet.png")
@@ -97,7 +98,7 @@ character_width = character_size[0]
 character_height = character_size[1]
 character_x_pos = (screen_width/2) - (character_width/2)
 character_y_pos = screen_height - character_height
-character_hp = 1
+character_hp = 6
 character_speed = 10
 
 bullet_xy = []
@@ -116,7 +117,7 @@ enemy = pygame.image.load(dir + "boss.png")
 enemy_size = enemy.get_rect().size
 enemy_width = enemy_size[0]
 enemy_height = enemy_size[1]
-enemy_hp = 150
+enemy_hp = 1
 enemy_x_pos = screen_width-300
 enemy_y_pos = (screen_height/2) - (enemy_height/2)
 enemy_speed = 3
@@ -352,11 +353,17 @@ msg = game_font.render(game_result, True, fill)
 msg_rect = msg.get_rect(center=(int(screen_width/2), int(screen_height/2)))
 screen.blit(msg, msg_rect)
 pygame.mixer.music.pause()
-over.play(0)
+if game_result == "GameOver":
+    over.play(0)
+    pygame.display.update()
+    pygame.time.delay(2000)
+else:
+    vic.play(0)
+    pygame.display.update()
+    pygame.time.delay(8000)
 # screen.fill(0, 0, 0)
-pygame.display.update()
 
 #2초대기
-pygame.time.delay(2000)
+# pygame.time.delay(2000)
 
 pygame.quit()
