@@ -27,22 +27,11 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 #화면 타이틀 설정
 pygame.display.set_caption("빵이의 모험") #게임 제목
 
-# start_point = [(100,150),(100,150),(100,550),(900,150)]
-# end_point = [(100,550),(900,150),(900,550),(900,550)]
-# for index in range(len(start_point)):
-#     pygame.draw.line(screen,(255,255,255),start_point[index],end_point[index])
-# if pygame.event.get().type == KEYDOWN:
-#     running = True
-#적 hp
-# enemyhp = "HP:" + str(enemy_hp)
-s_font = pygame.font.SysFont(None, 80)
-b_font = pygame.font.SysFont(None, 40)
-
 #이미지 파일위치 불러오기
 dir = os.path.dirname(__file__)+"\\"
 
 #적의 공격생성
-attack = pygame.image.load(dir + "attack.png")
+attack = pygame.image.load(dir + "bsattack.png")
 attack_size = attack.get_rect().size
 attack_width = attack_size[0]
 attack_height = attack_size[1]
@@ -50,7 +39,7 @@ attack_x_pos = random.randint(0, screen_width - attack_width)
 attack_y_pos = 0
 attack_speed = 15
 
-attack1 = pygame.image.load(dir + "attack.png")
+attack1 = pygame.image.load(dir + "bsattack.png")
 attack1_size = attack.get_rect().size
 attack1_width = attack_size[0]
 attack1_height = attack_size[1]
@@ -58,7 +47,7 @@ attack1_x_pos = random.randint(0, screen_width - attack1_width)
 attack1_y_pos = 0
 attack1_speed = 5
 
-attack2 = pygame.image.load(dir + "attack.png")
+attack2 = pygame.image.load(dir + "bsattack.png")
 attack2_size = attack.get_rect().size
 attack2_width = attack_size[0]
 attack2_height = attack_size[1]
@@ -66,7 +55,7 @@ attack2_x_pos = random.randint(0, screen_width - attack2_width)
 attack2_y_pos = 0
 attack2_speed = 10
 
-attack3 = pygame.image.load(dir + "attack.png")
+attack3 = pygame.image.load(dir + "bsattack.png")
 attack3_size = attack.get_rect().size
 attack3_width = attack_size[0]
 attack3_height = attack_size[1]
@@ -74,7 +63,7 @@ attack3_x_pos = 0
 attack3_y_pos = random.randint(0, screen_height - attack3_height)
 attack3_speed = 15
 
-attack4 = pygame.image.load(dir + "attack.png")
+attack4 = pygame.image.load(dir + "bsattack.png")
 attack4_size = attack.get_rect().size
 attack4_width = attack_size[0]
 attack4_height = attack_size[1]
@@ -88,9 +77,12 @@ clock = pygame.time.Clock()
 #배경
 background = pygame.image.load(dir + "back1.png")
 
-#브금
+#배경브금
 music = pygame.mixer.music.load(dir + "bgm.mp3")
 pygame.mixer.music.play(-1)
+
+#게임오버브금
+over = pygame.mixer.Sound(dir + "over.wav")
 
 #총알
 bullet = pygame.image.load(dir + "bullet.png")
@@ -105,7 +97,7 @@ character_width = character_size[0]
 character_height = character_size[1]
 character_x_pos = (screen_width/2) - (character_width/2)
 character_y_pos = screen_height - character_height
-character_hp = 5
+character_hp = 1
 character_speed = 10
 
 bullet_xy = []
@@ -124,10 +116,10 @@ enemy = pygame.image.load(dir + "boss.png")
 enemy_size = enemy.get_rect().size
 enemy_width = enemy_size[0]
 enemy_height = enemy_size[1]
-enemy_hp = 1
+enemy_hp = 150
 enemy_x_pos = screen_width-300
 enemy_y_pos = (screen_height/2) - (enemy_height/2)
-enemy_speed = 5
+enemy_speed = 3
 
 game_font = pygame.font.Font(None, 80)
 # game_start = "Press any key"
@@ -174,18 +166,11 @@ while running:
                 to_y -= character_speed
             # pygame.mixer.music.pause()
 
-    # enemy_x_pos -= enemy_speed
-    # if screen_height<= enemy_y_pos <= screen_height:
-    # enemy_y_pos -= enemy_speed
     if enemy_y_pos > screen_height-enemy_height or enemy_y_pos < 0:
         enemy_speed = enemy_speed * -1
         enemy_y_pos += enemy_speed
     else:
          enemy_y_pos += enemy_speed
-        # enemy_x_pos = random.randint(0, screen_width - enemy_width)
-    # elif enemy_x_pos <= 0:
-    #     enemy_y_pos = random.randint(0,screen_height - enemy_height)
-    #     enemy_x_pos = screen_width
 
     attack_y_pos += attack_speed
     if attack_y_pos > screen_height:
@@ -366,10 +351,12 @@ while running:
 msg = game_font.render(game_result, True, fill)
 msg_rect = msg.get_rect(center=(int(screen_width/2), int(screen_height/2)))
 screen.blit(msg, msg_rect)
+pygame.mixer.music.pause()
+over.play(0)
 # screen.fill(0, 0, 0)
 pygame.display.update()
 
-#3초대기
-pygame.time.delay(3000)
+#2초대기
+pygame.time.delay(2000)
 
 pygame.quit()
