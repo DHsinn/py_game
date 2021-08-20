@@ -124,21 +124,29 @@ enemy = pygame.image.load(dir + "boss.png")
 enemy_size = enemy.get_rect().size
 enemy_width = enemy_size[0]
 enemy_height = enemy_size[1]
-enemy_hp = 150
+enemy_hp = 1
 enemy_x_pos = screen_width-300
 enemy_y_pos = (screen_height/2) - (enemy_height/2)
 enemy_speed = 5
 
+game_font = pygame.font.Font(None, 80)
+# game_start = "Press any key"
+# msgg = game_font.render(game_start, True, (255, 255, 255))
+# msgg_rect = msgg.get_rect(center=(int(screen_width/2), int(screen_height/2)))
+# screen.blit(msgg, msgg_rect)
+# pygame.display.update()
+
+game_result = "GameOver"
+fill = (255, 0, 0)
 
 running = True
 while running:
     dt = clock.tick(70) #게임화면의 초당 프레임 수를 설정
 
-    game_over = font.render("Game_over", True, (255, 255, 255))
     # 2. 이벤트 처리 (키보드, 클릭 등)
     for event in pygame.event.get(): #이벤트 루프 사용자가 키입력을 하는지 체크
         if event.type == pygame.QUIT: # 창이 닫히는 이벤트 발생했나?
-            running = False
+            pygame.quit()
 
         if event.type == pygame.KEYDOWN: #키 눌렀을때
             if event.key == pygame.K_LEFT:
@@ -247,12 +255,17 @@ while running:
         if enemy_hp<=0:
             enemy_x_pos = screen_width
             enemy_y_pos = screen_height#random.randrange(0, screen_height-enemy_height)
+            game_result = "Victory"
+            fill = (150, 200, 150)
             running = False
         isShotenemy = False
     # image = font.render(hp1, True, (100,0,50))
+    
+    #캐릭터 이동
     character_x_pos += to_x
     character_y_pos += to_y
 
+    #캐릭터 화면밖으로 못나가게
     if character_x_pos < 0:
         character_x_pos = 0
     elif character_x_pos > screen_width - character_width:
@@ -281,7 +294,7 @@ while running:
         if hitman(timeData):
             character_hp-=1
         elif character_hp <= 0:
-            screen.blit(game_over, (250,200)) # running = False
+            running = False
     for _ in range(character_hp):
         if character_rect.colliderect(enemy_rect):
             hp = "HP:" + str(character_hp-1)
@@ -290,7 +303,7 @@ while running:
         if hitman(timeData):
             character_hp-=1
         if character_hp == 0:
-            screen.blit(game_over, (250,200)) # running = False
+            running = False
     for _ in range(character_hp):
         if character_rect.colliderect(attack_rect):
             hp = "HP:" + str(character_hp-1)
@@ -299,7 +312,7 @@ while running:
         if hitman(timeData):
             character_hp-=1
         if character_hp == 0:
-            screen.blit(game_over, (250,200)) # running = False
+            running = False
     for _ in range(character_hp):
         if character_rect.colliderect(attack1_rect):
             hp = "HP:" + str(character_hp-1)
@@ -308,7 +321,7 @@ while running:
         if hitman(timeData):
             character_hp-=1
         if character_hp == 0:
-            screen.blit(game_over, (250,200)) # running = False
+            running = False
     for _ in range(character_hp):
         if character_rect.colliderect(attack2_rect):
             hp = "HP:" + str(character_hp-1)
@@ -317,7 +330,7 @@ while running:
         if hitman(timeData):
             character_hp-=1
         if character_hp == 0:
-            screen.blit(game_over, (250,200))# running = False
+            running = False
     for _ in range(character_hp):
         if character_rect.colliderect(attack3_rect):
             hp = "HP:" + str(character_hp-1)
@@ -326,7 +339,7 @@ while running:
         if hitman(timeData):
             character_hp-=1
         if character_hp == 0:
-            screen.blit(game_over, (250,200)) # running = False
+            running = False
     for _ in range(character_hp):
         if character_rect.colliderect(attack4_rect):
             hp = "HP:" + str(character_hp-1)
@@ -349,4 +362,14 @@ while running:
         for bx,by in bullet_xy:
             screen.blit(bullet, (bx, by))
     pygame.display.update()
+
+msg = game_font.render(game_result, True, fill)
+msg_rect = msg.get_rect(center=(int(screen_width/2), int(screen_height/2)))
+screen.blit(msg, msg_rect)
+# screen.fill(0, 0, 0)
+pygame.display.update()
+
+#3초대기
+pygame.time.delay(3000)
+
 pygame.quit()
